@@ -1,0 +1,54 @@
+
+consul:
+  image: datamgtcloud/consul:latest
+  hostname: consul
+  dns: 127.0.0.1
+  restart: always
+  ports:
+  - "8500:8500"
+  volumes:
+  - /data/consul:/data
+  environment:
+  - CONSUL_OPTIONS=-bootstrap
+
+nginx:
+  image: datamgtcloud/consulNginx:latest
+  hostname: consul
+  dns: 127.0.0.1
+  restart: always
+  ports:
+  - "80:80"
+  links:
+  - consul:consul
+
+hub:
+  image: datacleansing/hub
+  hostname: hub
+  dns: 127.0.0.1
+  restart: always
+  links:
+  - consul:consul
+
+repo:
+  image: datacleansing/repo
+  hostname: repo
+  dns: 127.0.0.1
+  restart: always
+  links:
+  - consul:consul
+
+fileuploader:
+  image: datacleansing/fileuploader
+  hostname: fileuploader
+  dns: 127.0.0.1
+  restart: always
+  links:
+  - consul:consul
+
+engine:
+  image: datacleansing/engine
+  hostname: engine
+  dns: 127.0.0.1
+  restart: always
+  links:
+  - consul:consul
